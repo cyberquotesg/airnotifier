@@ -66,9 +66,9 @@ class WebApplication(tornado.web.Application):
         except (IndexError, KeyError):
             apns = None
 
-        if apns is not None and apns.hasError():
-            status = apns.getError()
-            error = True
+        # if apns is not None and apns.hasError():
+        #     status = apns.getError()
+        #     error = True
 
         return {"msg": status, "error": error}
 
@@ -106,8 +106,8 @@ class WebApplication(tornado.web.Application):
         tokens = appdb.tokens.find({"$or": conditions})
 
         regids = []
-        try:
-            for token in tokens:
+        for token in tokens:
+            try:
                 t = token.get("token")
                 if token["device"] == DEVICE_TYPE_IOS:
                     if apns is not None:
@@ -126,8 +126,8 @@ class WebApplication(tornado.web.Application):
                         wns.process(
                             token=t, alert=alert, extra=extra, wns=kwargs.get("wns", {})
                         )
-        except Exception as ex:
-            logging.error(ex)
+            except Exception as ex:
+                logging.error(ex)
 
     def main(self):
         options = self.container.serveroptions
