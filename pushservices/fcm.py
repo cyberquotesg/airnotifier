@@ -84,6 +84,9 @@ class FCMClient(PushService):
         if apns:
             payload["message"]["apns"] = apns
 
+        # override subject
+        payload["message"]["notification"]["title"] = payload["message"]["data"]["subject"]
+
         text = json_encode(payload)
         return text
 
